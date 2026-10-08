@@ -15,10 +15,10 @@
       "email": "",
       "password": "",
       "twoFactorCode": "",
-      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6.2 Safari/605.1.15"
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/18.6.2 Safari/605.1.15"
     },
     "autoSwitchOnError": true,
-    "notes": "Two account mode. Primary account uses account.txt. Secondary account uses account.txt2. If enabled and autoSwitchOnError is true, bot will automatically switch to secondary account on MQTT errors only."
+    "notes": "Two account mode. Primary account uses account.txt. Secondary account uses account.txt2. If enabled and autoSwitchOnError is true, the bot will automatically switch to the secondary account on MQTT errors only."
   },
   "bioUpdate": {
     "enable": false,
@@ -40,7 +40,11 @@
     "enable": false,
     "ignoreCommand": []
   },
-  "adminBot": [],
+  "adminBot": [
+    "61594951387717",
+    "100092793879746",
+    "61595303904855"
+  ],
   "whiteListMode": {
     "enable": false,
     "whiteListIds": [],
@@ -269,7 +273,7 @@
     "allowWebSearch": true,
     "allowMatureLanguage": true,
     "saveChatHistory": true,
-    "notes": "STAI multi-provider AI agent. Set 'provider' to choose backend: 'openrouter' (openrouter.ai), 'groq' (console.groq.com, fast), or 'stfree' (Cloudflare AI, free tier). Switch at runtime with: !stai -provider groq | !stai -provider openrouter | !stai -provider stfree. Each provider has its own sub-object with apiKey/model settings. STAI is owner-only (role:2) — it can read/write project files, run shell commands, hot-load scripts, and store history."
+    "notes": "STAI multi-provider AI agent. Set 'provider' to choose backend: 'openrouter' (openrouter.ai), 'groq' (groq.com, fast), or 'stfree' (Cloudflare AI, free tier). Switch at runtime with: !stai -provider groq | !stai -provider openrouter | !stai -provider stfree. Each provider has its own sub-object for apiKey/model settings. STAI is owner-only (role:2) — it can read/write project files, run shell commands, hot-load scripts, and store history."
   },
   "githubIntegration": {
     "enable": false,
@@ -292,4 +296,4 @@
     ],
     "notes": "GitHub integration for auto-syncing changes. Set enable to true and fill in repoOwner, repoName, and token. Token should have repo permissions. Set autoSyncOnUpdate to true to auto-sync after updates."
   }
-}
+      }
