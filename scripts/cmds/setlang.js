@@ -1,46 +1,67 @@
 const fs = require("fs-extra");
 
 module.exports = {
-        config: {
-                name: "setlang",
-		aliases: ["اللغة"],
-                version: "1.5",
-                author: "NTKhang",
-                countDown: 5,
-                role: 0,
-                description: {
-                        vi: "Cài đặt ngôn ngữ của bot cho nhóm chat hiện tại hoặc tất cả các nhóm chat",
-                        en: "Set default language of bot for current chat or all chats"
-                },
-                category: "owner",
-                guide: {
-                        vi: "   {pn} <language code ISO 639-1"
-                                + "\n   Ví dụ:"
-                                + "\n    {pn} en"
-                                + "\n    {pn} vi",
-                        en: "\n   {pn} <language code ISO 639-1"
-                                + "\n   Example:"
-                                + "\n    {pn} en"
-                                + "\n    {pn} vi"
-                }
-        },
+config: {
+name: "setlang",
+aliases: ["اللغة"],
+version: "2.0",
+author: "NTKhang",
+countDown: 5,
+role: 0,
+description: {
+en: "Change the bot language"
+},
+category: "owner",
+guide: {
+en: "{pn} en"
+}
+},
 
-        langs: {
-                vi: {
-                        setLangForAll: "Đã cài đặt ngôn ngữ mặc định cho bot là: %1",
-                        setLangForCurrent: "Đã cài đặt ngôn ngữ mặc định cho nhóm chat này là: %1",
-                        noPermission: "Chỉ admin bot mới có thể sử dụng lệnh này",
-                        langNotFound: "Không tìm thấy ngôn ngữ: %1"
-                },
-                en: {
-                        setLangForAll: "تعيين افتراضي language من البوت إلى: %1",
-                        setLangForCurrent: "تعيين افتراضي language لـ الحالي chat: %1",
-                        noPermission: "فقط البوت المشرف can use هذا الأمر",
-                        langNotFound: "لا يمكنك find language: %1"
-                }
-        },
+langs: {
+	en: {
+		setLangForAll: "✅ Default bot language changed to: %1",
+		setLangForCurrent: "✅ Language for this chat changed to: %1",
+		noPermission: "❌ You don't have permission to use this command.",
+		langNotFound: "❌ Language not found: %1",
+		missingCode: "❌ Please specify a language code. Example: setlang en",
+		error: "❌ Failed to change the language."
+	}
+},
 
-        onStart: async function ({ message }) {
-                return message.reply("❌ The language system has been removed. Bot language is now fixed to English.");
-        }
+onStart: async function ({ args, threadsData, message, event, getLang }) {
+	try {
+		const langCode = args[0];
+
+		if (!langCode)
+			return message.reply(getLang("missingCode"));
+
+		const langPath = `${__dirname}/../../languages/${langCode}.lang`;
+
+		if (!fs.existsSync(langPath))
+			return message.reply(getLang("langNotFound", langCode));
+
+		const adminBot = global.GoatBot?.config?.adminBot || [];
+		const isBotAdmin = adminBot.includes(event.senderID);
+
+		if (isBotAdmin) {
+			global.GoatBot.config.language = langCode;
+
+			fs.writeFileSync(
+				global.client.dirConfig,
+				JSON.stringify(global.GoatBot.config, null, 2)
+			);
+
+			return message.reply(getLang("setLangForAll", langCode));
+		}
+
+		await threadsData.set(event.threadID, langCode, "data.language");
+
+		return message.reply(getLang("setLangForCurrent", langCode));
+	}
+	catch (err) {
+		console.error("setlang error:", err);
+		return message.reply(getLang("error"));
+	}
+}
+
 };
